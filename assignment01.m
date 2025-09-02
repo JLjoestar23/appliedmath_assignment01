@@ -1,9 +1,20 @@
-function assignment01()
-    %Definition of the test function and its derivative
-    test_func01 = @(x) (x.^3)/100 - (x.^2)/8 + 2*x + 6*sin(x/2+6) -.7 - exp(x/6);
-    test_derivative01 = @(x) 3*(x.^2)/100 - 2*x/8 + 2 +(6/2)*cos(x/2+6) - exp(x/6)/6;
+%% Definition of the test function and its derivative
+test_func01 = @(x) (x.^3)/100 - (x.^2)/8 + 2*x + 6*sin(x/2+6) -.7 - exp(x/6);
+test_derivative01 = @(x) 3*(x.^2)/100 - 2*x/8 + 2 +(6/2)*cos(x/2+6) - exp(x/6)/6;
 
-    test_func01(3)
+%% Bisection Method
 
-    bisection(test_func01,0,0,5,1);
-end
+x = linspace(-10, 10, 1000);
+
+% plotting numerical root finding results from bisection method
+plot(x, test_func01(x));
+hold on;
+plot(x, zeros(size(x)), '--');
+
+bisection_root = bisection_solver(test_func01, -5, 5, 1e-5, 1000);
+
+plot(bisection_root, 0, '.', MarkerSize=20);
+legend('Function', 'Y=0', 'Root Approx.');
+
+hold off;
+%% 

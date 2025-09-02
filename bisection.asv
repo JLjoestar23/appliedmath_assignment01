@@ -1,0 +1,13 @@
+function root_approx = bisection(func, L_bound_i, R_bound_i, max_iter, convergence_value)
+    L_bound_n = L_bound_i;
+    R_bound_n = R_bound_i;
+    
+    midpoint = (L_bound_n + R_bound_n) / 2;
+
+    if (func(L_bound_n) > 0 && func(midpoint) < 0) || (func(L_bound_n) < 0 && func(midpoint) > 0)
+        R_bound_n = midpoint;
+    end
+
+    if func(L_bound_n) > 
+
+end
