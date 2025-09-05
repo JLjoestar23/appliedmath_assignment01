@@ -7,7 +7,7 @@ function root_approx = newton_solver_jojo(fun, x0, convergence_threshold, max_it
     % loop until iterations reached the specified maximum number
     for i=1:max_iter
         
-        % evaluate the function and its derivative
+        % evaluate the function at the approximated root
         [f, dfdx] = fun(x_n);
         
         % break if df/dx is 0, which will result in an invalid operation
@@ -16,7 +16,7 @@ function root_approx = newton_solver_jojo(fun, x0, convergence_threshold, max_it
             break
         end
 
-        % calculate the root approximation for the current iteration
+        % calculate the root approximation for the next iteration
         x_next = x_n - (f/dfdx);
         
         % break if the update step is too large

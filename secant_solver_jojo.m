@@ -1,4 +1,4 @@
-function root_approx = secant_solver_jojo(func, x0, x1, convergence_threshold, max_iter)
+function root_approx = secant_solver_jojo(fun, x0, x1, convergence_threshold, max_iter)
     % basic implementation of the secant method for numerical root finding
 
     status = 0; % convergence status
@@ -10,17 +10,23 @@ function root_approx = secant_solver_jojo(func, x0, x1, convergence_threshold, m
     % loop until iterations reached the specified maximum number
     for i=1:max_iter
         
+        % evaluate the function at the current approximated root
+        [f_n, ~] = fun(x_n);
+
+        % evaluate the function at the previously approximated root
+        [f_prev, ~] = fun(x_prev);
+        
         % break if the update step is too large
-        if abs(func(x_n) - func(x_prev)) > 1/convergence_threshold
+        if abs(f_n - f_prev) > 1/convergence_threshold
             warning('Updated step size is too large, method failed.');
             break
         end
 
-        % calculate the root approximation for the current iteration
-        x_next = x_n - func(x_n)*((x_n - x_prev)/(func(x_n) - func(x_prev)));
+        % calculate the root approximation for the next iteration
+        x_next = x_n - f_n*((x_n - x_prev)/(f_n - f_prev));
         
         % check for convergence
-        if abs(x_next - x_n) < convergence_threshold && abs(func(x_n)) < convergence_threshold
+        if abs(x_next - x_n) < convergence_threshold && abs(f_n) < convergence_threshold
             status = 1; % set status to success
             break
         end
