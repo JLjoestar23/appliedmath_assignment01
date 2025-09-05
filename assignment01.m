@@ -12,7 +12,7 @@ plot(x, test_func01(x));
 hold on;
 plot(x, zeros(size(x)), '--');
 
-bisection_root = bisection_solver(test_func01, -25, 25, 10e-14, 1000);
+bisection_root = bisection_solver(@test_function, -25, 25, 10e-14, 1000);
 
 plot(bisection_root, test_func01(bisection_root), '.', MarkerSize=20);
 legend('Function', 'Y=0', 'Root Approx.');
@@ -45,7 +45,7 @@ plot(x, test_func01(x));
 hold on;
 plot(x, zeros(size(x)), '--');
 
-secant_root = secant_solver_jojo(test_func01, 0, 5, 10e-14, 1000);
+secant_root = secant_solver_jojo(@test_function, 0, 5, 10e-14, 1000);
 
 plot(secant_root, test_func01(secant_root), '.', MarkerSize=20);
 legend('Function', 'Y=0', 'Root Approx.');
