@@ -7,6 +7,12 @@ function root_approx = bisection_solver(func, L_bound_i, R_bound_i, convergence_
     midpoint = (L_bound + R_bound) / 2;
     current_iter = 0;
     status = 0;
+    
+    if ~(func(L_bound) < 0 && func(R_bound) > 0 || func(L_bound) > 0 && func(R_bound) < 0)
+        warning("This interval does not contain a zero crossing. Pick a different interval.");
+        root_approx = NaN;
+        return
+    end
 
     % repeat until the distance between the bounds reaches and output value of the root reach the threshold
     while (abs(L_bound - R_bound) > convergence_threshold) && abs(func(midpoint)) > convergence_threshold
