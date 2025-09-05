@@ -1,21 +1,20 @@
 function root_approx = bisection_solver(func, L_bound_i, R_bound_i, convergence_threshold, max_iter)
-    % basic implementation of the bisection numerical root finding
-    % algorithm
-    % 
-    % Inputs:
-    % func: the function to find the
+    % basic implementation of the bisection method for numerical root finding
 
-    % intialize left and right bounds
+    % intialize left and right bounds, and other initial values
     L_bound = L_bound_i;
     R_bound = R_bound_i;
-    current_iter = 1;
-    
-    % repeat until the distance between the bounds reaches the threshold
-    while (abs(L_bound - R_bound) > convergence_threshold)
+    midpoint = (L_bound + R_bound) / 2;
+    current_iter = 0;
+    status = 0;
+
+    % repeat until the distance between the bounds reaches and output value of the root reach the threshold
+    while (abs(L_bound - R_bound) > convergence_threshold) && abs(func(midpoint)) > convergence_threshold
         % if the initial conditions are bad and the solver does not
         % converge, throw an error message and break
-        if current_iter > max_iter
-            disp("Convergence failed, try different initial guesses");
+        if current_iter == max_iter
+            warning("Convergence failed, try different initial guesses.");
+            status = 0;
             break
         end
     
@@ -34,10 +33,17 @@ function root_approx = bisection_solver(func, L_bound_i, R_bound_i, convergence_
         % count the iterations
         current_iter = current_iter + 1;
 
-    end
+        % keep status successful as long as the loop runs
+        status = 1;
+    end 
        
-    % return the approximated root value
-    root_approx = midpoint;
-    
-
+    if status == 1
+        % return the approximated root value
+        root_approx = midpoint;
+        final_disp = strcat("Root Found, Number of Iterations: ", num2str(current_iter));
+        disp(final_disp);
+    else
+        warning("Convergence failed, try different initial guesses.");
+        root_approx = NaN;
+    end
 end
