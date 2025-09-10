@@ -48,7 +48,7 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         [p, k] = generate_error_fit(x_regression, y_regression);
         
         % generate x data on a logarithmic range
-        fit_line_x = 10.^(-16:0.1:1);
+        fit_line_x = 10.^(-16:0.1:5);
         % compute the corresponding y values
         fit_line_y = k*fit_line_x.^p;
 
@@ -73,8 +73,8 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         title('Convergence Analysis for Bisection Method', 'FontSize', 14);
         xlabel('\epsilon_{n}', 'FontSize', 18);
         ylabel('\epsilon_{n+1}', 'FontSize', 18);
-        xlim([10e-16, 10e1]);
-        ylim([10e-19, 10e1])
+        %xlim([10e-16, 10e1]);
+        %ylim([10e-19, 10e1])
         grid on;
         loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 2);
         legend('Raw', 'Processed', 'Fitted line');
@@ -111,7 +111,7 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         [p, k] = generate_error_fit(x_regression, y_regression);
         
         % generate x data on a logarithmic range
-        fit_line_x = 10.^(-16:0.1:1);
+        fit_line_x = 10.^(-16:0.1:5);
         % compute the corresponding y values
         fit_line_y = k*fit_line_x.^p;
 
@@ -136,8 +136,8 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         title('Convergence Analysis for Newton''s Method', 'FontSize', 14);
         xlabel('\epsilon_{n}', 'FontSize', 18);
         ylabel('\epsilon_{n+1}', 'FontSize', 18);
-        xlim([10e-16, 10e1]);
-        ylim([10e-19, 10e1])
+        %xlim([10e-16, 10e1]);
+        %ylim([10e-19, 10e1])
         grid on;
         loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 2);
         legend('Raw', 'Processed', 'Fitted line');
@@ -171,7 +171,7 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         [p, k] = generate_error_fit(x_regression, y_regression);
         
         % generate x data on a logarithmic range
-        fit_line_x = 10.^(-16:0.1:1);
+        fit_line_x = 10.^(-16:0.1:5);
         % compute the corresponding y values
         fit_line_y = k*fit_line_x.^p;
 
@@ -193,8 +193,8 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         title('Convergence Analysis for Secant Method', 'FontSize', 14);
         xlabel('\epsilon_{n}', 'FontSize', 18);
         ylabel('\epsilon_{n+1}', 'FontSize', 18);
-        xlim([10e-16, 10e1]);
-        ylim([10e-19, 10e1])
+        %xlim([10e-16, 10e1]);
+        %ylim([10e-19, 10e1])
         grid on;
         loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 2);
         legend('Raw', 'Processed', 'Fitted line');
@@ -228,7 +228,7 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         [p, k] = generate_error_fit(x_regression, y_regression);
         
         % generate x data on a logarithmic range
-        fit_line_x = 10.^(-16:0.1:1);
+        fit_line_x = 10.^(-16:0.1:5);
         % compute the corresponding y values
         fit_line_y = k*fit_line_x.^p;
 
@@ -245,8 +245,8 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         title('Convergence Analysis for fzero', 'FontSize', 14);
         xlabel('\epsilon_{n}', 'FontSize', 18);
         ylabel('\epsilon_{n+1}', 'FontSize', 18);
-        xlim([10e-16, 10e1]);
-        ylim([10e-19, 10e1])
+        %xlim([10e-16, 10e1]);
+        %ylim([10e-19, 10e1])
         grid on;
         loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 2);
         legend('Raw', 'Processed', 'Fitted line');
