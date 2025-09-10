@@ -347,11 +347,11 @@ x_guess_list_0 = zeros(1000, 1);
 x_guess_list_1 = zeros(1000, 1);
 
 for i = 1:1000
-    x_guess_list_0(i) = -1 - 3*rand();
-    x_guess_list_1(i) = 1 + 3*rand();
+    x_guess_list_0(i) = 4 - 3*rand();
+    x_guess_list_1(i) = 4 + 3*rand();
 end
 
-convergence_analysis("bisection", @convergence_test_func, [], x_guess_list_0, x_guess_list_1);
+convergence_analysis("bisection", @convergence_test_func_2, [], x_guess_list_0, x_guess_list_1);
 
 %% Testing generalized convergence analysis function for Newton's method
 
@@ -361,7 +361,7 @@ for i = 1:1000
     x0_list(i) = 3*rand();
 end
 
-convergence_analysis("newton", @convergence_test_func, x0_list, [], []);
+convergence_analysis("newton", @convergence_test_func_2, x0_list, [], []);
 
 %% Testing generalized convergence analysis function for Secant method
 
@@ -371,7 +371,7 @@ for i = 1:1000
     x0_list(i) = 3*rand();
 end
 
-convergence_analysis("secant", @convergence_test_func, x0_list, [], []);
+convergence_analysis("secant", @convergence_test_func_2, x0_list, [], []);
 
 %% Testing generalized convergence analysis function for fzero
 
@@ -381,4 +381,4 @@ for i = 1:1000
     x0_list(i) = 3*rand();
 end
 
-convergence_analysis("fzero", @convergence_test_func, x0_list, [], []);
+convergence_analysis("fzero", @convergence_test_func_2, x0_list, [], []);
