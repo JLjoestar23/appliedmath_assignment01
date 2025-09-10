@@ -52,17 +52,12 @@ legend('Function', 'Y=0', 'Root Approx.');
 
 hold off;
 
-%% Testing convergence for Bisection method
+%% Testing convergence for Bisection method (unsure if works)
 % declare input_list as a global variable
 global input_list;
 
 % number of trials we would like to perform
 num_iter = 100;
-
-% list for the initial guesses that we would like to use each trial. These 
-% guesses have all been chosen so that each trial will converge to the 
-% same root because the root is somewhere between -3 and 3.
-x0_list = linspace(-3, 3, num_iter);
 
 %list of estimate at current iteration (x_{n}) compiled across all trials
 x_current_list = [];
@@ -74,21 +69,26 @@ x_next_list = [];
 % collected from
 index_list = [];
 
+% calculate root to base initial guesses off of
+x_r_calc = bisection_solver(@convergence_test_func, -3, 3, 10e-14, 1000);
+
 %loop through each trial
 for n = 1:num_iter
     % pull out the left and right guess for the trial
-    x0 = x0_list(n);
-    x1 = -x0;
+    x0 = x_r_calc - 3*rand();
+    x1 = x_r_calc + 3*rand();
+
     % clear the input_list global variable
     input_list = [];
+
     % run the newton solver
-    x_r = bisection_solver(@convergence_test_func, x0, x1, 10e-14, 1000);
+    [x_r, return_list] = bisection_convergence_test(@convergence_test_func, x0, x1, 10e-14, 1000);
     % at this point, input_list will be populated with the values that the 
     % solver called at each iteration. In other words, it is now 
     % [x_1,x_2,...x_n-1,x_n] append the collected data to the compilation
-    x_current_list = [x_current_list,input_list(1:end-1)];
-    x_next_list = [x_next_list,input_list(2:end)];
-    index_list = [index_list,1:length(input_list)-1];
+    x_current_list = [x_current_list,return_list(1:end-1)];
+    x_next_list = [x_next_list,return_list(2:end)];
+    %index_list = [index_list,1:length(input_list)-1];
 end
 
 % computing error based on guesses and highly accurate root
@@ -160,7 +160,7 @@ ylim([10e-19, 10e1])
 grid on;
 hold off;
 
-%% Testing convergence for Secant method (does not work)
+%% Testing convergence for Secant method
 % declare input_list as a global variable
 global input_list;
 
@@ -208,7 +208,7 @@ hold on;
 title('Convergence Analysis for Secant Method', 'FontSize', 14);
 xlabel('\epsilon_{n}', 'FontSize', 18);
 ylabel('\epsilon_{n+1}', 'FontSize', 18);
-xlim([10e-16, 10e1]);
+xlim([10e-18, 10e1]);
 ylim([10e-19, 10e1])
 grid on;
 hold off;
@@ -266,3 +266,119 @@ xlim([10e-18, 10e1]);
 ylim([10e-19, 10e1])
 grid on;
 hold off;
+
+%% Data processing for Newton's method
+
+% data points to be used in the regression
+x_regression = []; % e_n
+y_regression = []; % e_{n+1}
+
+% iterate through the collected data
+for n=1:length(index_list)
+    % if the error is not too big or too small and it was enough iterations
+    % into the trial...
+    if error_current(n)>1e-15 && error_current(n)<1e-2 && error_next(n)>1e-14 && error_next(n)<1e-2 && index_list(n)>2
+        % then add it to the set of points for regression
+        x_regression(end+1) = error_current(n);
+        y_regression(end+1) = error_next(n);
+    end
+end
+
+% data points to be used in the regression
+% p and k are the output coefficients
+% generate Y, X1, and X2
+% note that I use the transpose operator (')
+% to convert the result from a row vector to a column
+% If you are copy-pasting, the ' character may not work correctly
+Y = log(y_regression)';
+X1 = log(x_regression)';
+X2 = ones(length(X1),1);
+%run the regression
+coeff_vec = regress(Y,[X1,X2]);
+%pull out the coefficients from the fit
+p = coeff_vec(1);
+k = exp(coeff_vec(2));
+
+% generate x data on a logarithmic range
+fit_line_x = 10.^(-16:0.1:1);
+% compute the corresponding y values
+fit_line_y = k*fit_line_x.^p;
+
+% visualize processed data
+figure('Color', 'w');
+loglog(error_current, error_next, 'r.', 'markerfacecolor', 'r', 'markersize', 4);
+hold on;
+loglog(x_regression, y_regression, 'g.', 'markerfacecolor', 'g', 'markersize', 4);
+title('Convergence Analysis for Newton''s Method', 'FontSize', 14);
+xlabel('\epsilon_{n}', 'FontSize', 18);
+ylabel('\epsilon_{n+1}', 'FontSize', 18);
+xlim([10e-16, 10e1]);
+ylim([10e-19, 10e1])
+grid on;
+loglog(fit_line_x,fit_line_y, 'k--', 'LineWidth', 2);
+legend('Raw', 'Processed', 'Fitted line');
+hold off;
+
+%% Compare regression k value to predicted k value
+
+% for the first and second derivative of a function
+
+%set the step size to be tiny
+delta_x = 1e-6;
+
+% compute the function at different points near x
+f_left = test_func01(x_r - delta_x);
+f_0 = test_func01(x_r);
+f_right = test_func01(x_r + delta_x);
+
+% approximate the first derivative
+dfdx = (f_right - f_left) / (2*delta_x);
+
+% approximate the second derivative
+d2fdx2 = (f_right - 2*f_0 + f_left) / (delta_x^2);
+
+% calculate predicted k value
+k_pred = abs(0.5*(d2fdx2/dfdx));
+
+
+%% Testing generalized convergence analysis function for Bisection method
+
+x_guess_list_0 = zeros(1000, 1);
+x_guess_list_1 = zeros(1000, 1);
+
+for i = 1:1000
+    x_guess_list_0(i) = -1 - 3*rand();
+    x_guess_list_1(i) = 1 + 3*rand();
+end
+
+convergence_analysis("bisection", @convergence_test_func, [], x_guess_list_0, x_guess_list_1);
+
+%% Testing generalized convergence analysis function for Newton's method
+
+x0_list = ones(1000, 1);
+
+for i = 1:1000
+    x0_list(i) = 3*rand();
+end
+
+convergence_analysis("newton", @convergence_test_func, x0_list, [], []);
+
+%% Testing generalized convergence analysis function for Secant method
+
+x0_list = ones(1000, 1);
+
+for i = 1:1000
+    x0_list(i) = 3*rand();
+end
+
+convergence_analysis("secant", @convergence_test_func, x0_list, [], []);
+
+%% Testing generalized convergence analysis function for fzero
+
+x0_list = ones(1000, 1);
+
+for i = 1:1000
+    x0_list(i) = 3*rand();
+end
+
+convergence_analysis("fzero", @convergence_test_func, x0_list, [], []);
