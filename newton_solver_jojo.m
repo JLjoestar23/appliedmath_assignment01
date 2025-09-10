@@ -43,8 +43,8 @@ function root_approx = newton_solver_jojo(fun, x0, convergence_threshold, max_it
     % if successful, return value of the approximated root
     if status == 1
         root_approx = x_n;
-        final_disp = strcat("Root Found, Number of Iterations: ", num2str(i));
-        disp(final_disp);
+        %final_disp = strcat("Root Found, Number of Iterations: ", num2str(i));
+        %disp(final_disp);
     else % warning flag if convergence failed
         warning("Convergence failed, try different initial guesses or reduce convergence threshold.");
         root_approx = NaN;
