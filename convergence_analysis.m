@@ -1,5 +1,41 @@
 function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess_list_1)
-    
+    % CONVERGENCE_ANALYSIS  Perform empirical convergence analysis of nonlinear solvers.
+    %
+    %   convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess_list_1)
+    %
+    %   This function evaluates the convergence behavior of several iterative root-finding
+    %   methods (Bisection, Newton, Secant, and MATLAB’s fzero) by running repeated trials,
+    %   recording the sequence of iterates, and analyzing the error reduction per iteration.
+    %   It produces log-log plots of error_{n+1} versus error_{n}, estimates the order of
+    %   convergence (p) and error constant (k) via regression, and compares them with the
+    %   theoretically predicted values where applicable.
+    %
+    %   INPUTS:
+    %       solver_flag     - String specifying which solver to analyze:
+    %                           "bisection" | "newton" | "secant" | "fzero"
+    %       fun             - Function handle for the nonlinear equation f(x) = 0.
+    %                         Used by Newton/secant/fzero methods and for derivative
+    %                         approximations.
+    %       x0_list         - Vector of initial guesses for solvers that require a
+    %                         single starting point (Newton, Secant, fzero).
+    %       x_guess_list_0  - Vector of first interval endpoints (Bisection only).
+    %       x_guess_list_1  - Vector of second interval endpoints (Bisection only).
+    %
+    %   OUTPUTS:
+    %       This function does not return variables but:
+    %           - Prints estimated and predicted convergence parameters (p, k).
+    %           - Generates log-log plots comparing raw errors, filtered data,
+    %             and fitted convergence lines for visualization.
+    %
+    %   NOTES:
+    %       - The function uses a global variable 'input_list' to capture the sequence
+    %         of iterates during each solver run.
+    %       - Data are filtered to exclude transients and very large/small errors
+    %         before regression.
+    %       - For Newton’s method, derivatives at the root are approximated using
+    %         finite differences to predict the error constant.
+    %       - Number of trials is fixed at 1000 for statistical sampling.
+
    % declare input_list as a global variable
     global input_list;
     

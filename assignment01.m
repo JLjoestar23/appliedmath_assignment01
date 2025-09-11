@@ -343,11 +343,14 @@ k_pred = abs(0.5*(d2fdx2/dfdx));
 
 %% Testing generalized convergence analysis function for Bisection method
 
+% initialize L and R bounds
 x_guess_list_0 = zeros(1000, 1);
 x_guess_list_1 = zeros(1000, 1);
 
+% solve for a very good root approx to base L and R bounds off of
 x_r_calc = bisection_solver(@convergence_test_func_2, 0, 50, 10e-14, 1000);
 
+% assign random values that are shifted away from the root for the test
 for i = 1:1000
     x_guess_list_0(i) = x_r_calc - 3*rand();
     x_guess_list_1(i) = x_r_calc + 3*rand();
@@ -357,8 +360,10 @@ convergence_analysis("bisection", @convergence_test_func_2, [], x_guess_list_0, 
 
 %% Testing generalized convergence analysis function for Newton's method
 
+% initialize list of intial guesses
 x0_list = ones(1000, 1);
 
+% assign random values from 0-3
 for i = 1:1000
     x0_list(i) = 3*rand();
 end
@@ -367,8 +372,10 @@ convergence_analysis("newton", @convergence_test_func_2, x0_list, [], []);
 
 %% Testing generalized convergence analysis function for Secant method
 
+% initialize list of intial guesses
 x0_list = ones(1000, 1);
 
+% assign random values from 0-3
 for i = 1:1000
     x0_list(i) = 3*rand();
 end
@@ -377,8 +384,10 @@ convergence_analysis("secant", @convergence_test_func_2, x0_list, [], []);
 
 %% Testing generalized convergence analysis function for fzero
 
+% initialize list of intial guesses
 x0_list = ones(1000, 1);
 
+% assign random values from 0-3
 for i = 1:1000
     x0_list(i) = 3*rand();
 end
