@@ -346,9 +346,11 @@ k_pred = abs(0.5*(d2fdx2/dfdx));
 x_guess_list_0 = zeros(1000, 1);
 x_guess_list_1 = zeros(1000, 1);
 
+x_r_calc = bisection_solver(@convergence_test_func_2, 0, 50, 10e-14, 1000);
+
 for i = 1:1000
-    x_guess_list_0(i) = 4 - 3*rand();
-    x_guess_list_1(i) = 4 + 3*rand();
+    x_guess_list_0(i) = x_r_calc - 3*rand();
+    x_guess_list_1(i) = x_r_calc + 3*rand();
 end
 
 convergence_analysis("bisection", @convergence_test_func_2, [], x_guess_list_0, x_guess_list_1);
