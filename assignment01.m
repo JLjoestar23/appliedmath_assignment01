@@ -1,4 +1,4 @@
-%% Definition of the test function and its derivative
+%% Definition of test function 01 and its derivative
 test_func01 = @(x) (x.^3)/100 - (x.^2)/8 + 2*x + 6*sin(x/2+6) -.7 - exp(x/6);
 test_derivative01 = @(x) 3*(x.^2)/100 - 2*x/8 + 2 +(6/2)*cos(x/2+6) - exp(x/6)/6;
 
@@ -393,3 +393,165 @@ for i = 1:1000
 end
 
 convergence_analysis("fzero", @convergence_test_func_2, x0_list, [], []);
+
+%% Testing edge cases where f'(x_root) = 0
+
+% initialize list of intial guesses
+x0_list = ones(1000, 1);
+
+% assign random values from 0-3
+for i = 1:1000
+    x0_list(i) = 10*rand();
+end
+
+convergence_analysis("newton", @edge_case_function, x0_list, [], []);
+
+%% Testing sigmoid function with Newton's method
+
+% initialize root test range
+x_test_range = linspace(0, 50, 500);
+
+% sort initial guesses into success or fail depending on convergence
+success_list = [];
+fail_list = [];
+
+% find good root approx based on close initial guess
+x_r = newton_solver_jojo(@sigmoid_test_function, 25, 10e-14, 1000);
+
+% start testing initial guesses
+for i=1:length(x_test_range)
+    current_guess = x_test_range(i);
+    root_approx = newton_solver_jojo(@sigmoid_test_function, current_guess, 10e-14, 1000);
+    if isnan(root_approx)
+        fail_list(end+1) = current_guess;
+    else
+        success_list(end+1) = current_guess;
+    end
+end
+
+% initial guesses close to x_r are successful
+figure();
+hold on;
+plot(x_test_range, sigmoid_test_function(x_test_range));
+plot(x_test_range, zeros(1, length(x_test_range)), '--');
+plot(success_list, sigmoid_test_function(success_list), 'g.');
+plot(fail_list, sigmoid_test_function(fail_list), 'r.');
+plot(x_r, sigmoid_test_function(x_r), 'b.', 'MarkerSize', 15);
+legend('', '', 'Successful x0', 'Failed x0', 'Zero');
+title('Testing Newton''s Method on a Shifted Sigmoid Function');
+grid on;
+hold off;
+
+%% Testing sigmoid function with secant method
+
+% initialize root test range
+x_test_range = linspace(0, 50, 500);
+
+% sort initial guesses into success or fail depending on convergence
+success_list = [];
+fail_list = [];
+
+% find good root approx based on close initial guess
+x_r = secant_solver_jojo(@sigmoid_test_function, 25, 0.0001, 10e-14, 1000);
+
+% start testing initial guesses
+for i=1:length(x_test_range)
+    current_guess = x_test_range(i);
+    root_approx = secant_solver_jojo(@sigmoid_test_function, current_guess, 0.0001, 10e-14, 1000);
+    if isnan(root_approx)
+        fail_list(end+1) = current_guess;
+    else
+        success_list(end+1) = current_guess;
+    end
+end
+
+% most initial guesses failed
+figure();
+hold on;
+plot(x_test_range, sigmoid_test_function(x_test_range));
+plot(x_test_range, zeros(1, length(x_test_range)), '--');
+plot(success_list, sigmoid_test_function(success_list), 'g.');
+plot(fail_list, sigmoid_test_function(fail_list), 'r.');
+plot(x_r, sigmoid_test_function(x_r), 'b.', 'MarkerSize', 15);
+legend('', '', 'Successful x0', 'Failed x0', 'Zero');
+title('Testing Secant Method on a Shifted Sigmoid Function');
+grid on;
+hold off;
+
+%% Testing sigmoid function with fzero
+
+% initialize root test range
+x_test_range = linspace(0, 50, 500);
+
+% sort initial guesses into success or fail depending on convergence
+success_list = [];
+fail_list = [];
+
+% find good root approx based on close initial guess
+x_r = fzero(@sigmoid_test_function, 25);
+
+% start testing initial guesses
+for i=1:length(x_test_range)
+    current_guess = x_test_range(i);
+    root_approx = fzero(@sigmoid_test_function, current_guess);
+    if isnan(root_approx)
+        fail_list(end+1) = current_guess;
+    else
+        success_list(end+1) = current_guess;
+    end
+end
+
+% all initial guesses were successful
+figure();
+hold on;
+plot(x_test_range, sigmoid_test_function(x_test_range));
+plot(x_test_range, zeros(1, length(x_test_range)), '--');
+plot(success_list, sigmoid_test_function(success_list), 'g.');
+plot(fail_list, sigmoid_test_function(fail_list), 'r.');
+plot(x_r, sigmoid_test_function(x_r), 'b.', 'MarkerSize', 15);
+legend('', '', 'Successful x0', 'Failed x0', 'Zero');
+title('Testing fzero on a Shifted Sigmoid Function');
+grid on;
+hold off;
+
+%% Testing sigmoid function with bisection method
+
+% for plotting purposes
+x_test_range = linspace(0, 50, 500);
+
+% sort initial guesses into success or fail depending on convergence
+success_list = [];
+fail_list = [];
+
+% find good root approx based on close initial guess
+x_r = bisection_solver(@sigmoid_test_function, 25, 30, 10e-14, 1000);
+
+% initialize root test range
+x_test_range_L = linspace(0, x_r - 0.01, 250);
+x_test_range_R = linspace(x_r + 0.01, x_r + (50 - x_r), 250);
+
+% start testing initial guesses
+for i=1:length(x_test_range_L)
+    current_guess_L = x_test_range_L(i);
+    current_guess_R = x_test_range_R(i);
+    root_approx = bisection_solver(@sigmoid_test_function, current_guess_L, current_guess_R, 10e-14, 1000);
+    disp(root_approx)
+    if isnan(root_approx)
+        fail_list = [fail_list, [current_guess_L, current_guess_R]];
+    else
+        success_list = [success_list, [current_guess_L, current_guess_R]];
+    end
+end
+
+% all initial guess pairs were successful
+figure();
+hold on;
+plot(x_test_range, sigmoid_test_function(x_test_range));
+plot(x_test_range, zeros(1, length(x_test_range)), '--');
+plot(success_list, sigmoid_test_function(success_list), 'g.');
+plot(fail_list, sigmoid_test_function(fail_list), 'r.');
+plot(x_r, sigmoid_test_function(x_r), 'b.', 'MarkerSize', 15);
+legend('', '', 'Successful x0', 'Failed x0', 'Zero');
+title('Testing Bisection Method on a Shifted Sigmoid Function');
+grid on;
+hold off;
