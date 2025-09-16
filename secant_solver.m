@@ -1,5 +1,7 @@
 function root_approx = secant_solver(fun, x0, x1, convergence_threshold, max_iter)
     % basic implementation of the secant method for numerical root finding
+    % adjusted for use case in the tumbling egg problem as it expects
+    % a single output instead of 2
 
     status = 0; % convergence status
     
