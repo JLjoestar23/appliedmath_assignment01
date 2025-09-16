@@ -106,14 +106,15 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         loglog(error_current, error_next, 'r.', 'markerfacecolor', 'r', 'markersize', 4);
         hold on;
         loglog(x_regression, y_regression, 'g.', 'markerfacecolor', 'g', 'markersize', 4);
+        loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 1);
         title('Convergence Analysis for Bisection Method', 'FontSize', 14);
+        legend('Raw', 'Processed', 'Fitted line');
         xlabel('\epsilon_{n}', 'FontSize', 18);
         ylabel('\epsilon_{n+1}', 'FontSize', 18);
-        %xlim([10e-16, 10e1]);
-        %ylim([10e-19, 10e1])
+        xlim([10e-18, 10e5]);
+        ylim([10e-18, 10e5]);
         grid on;
-        loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 2);
-        legend('Raw', 'Processed', 'Fitted line');
+        axis square;
         hold off;
 
     elseif solver_flag == "newton"
@@ -126,7 +127,7 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
             input_list = [];
 
             % run the newton solver
-            x_r = newton_solver_jojo(@convergence_test_func, x0, 10e-14, 1000);
+            x_r = newton_solver_jojo(fun, x0, 10e-14, 1000);
 
             % at this point, input_list will be populated with the values that the 
             % solver called at each iteration. In other words, it is now 
@@ -169,14 +170,15 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         loglog(error_current, error_next, 'r.', 'markerfacecolor', 'r', 'markersize', 4);
         hold on;
         loglog(x_regression, y_regression, 'g.', 'markerfacecolor', 'g', 'markersize', 4);
+        loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 1);
         title('Convergence Analysis for Newton''s Method', 'FontSize', 14);
+        legend('Raw', 'Processed', 'Fitted line');
         xlabel('\epsilon_{n}', 'FontSize', 18);
         ylabel('\epsilon_{n+1}', 'FontSize', 18);
-        %xlim([10e-16, 10e1]);
-        %ylim([10e-19, 10e1])
+        xlim([10e-18, 10e5]);
+        ylim([10e-18, 10e5]);
         grid on;
-        loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 2);
-        legend('Raw', 'Processed', 'Fitted line');
+        axis square;
         hold off;
     
     elseif solver_flag == "secant"
@@ -226,14 +228,15 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         loglog(error_current, error_next, 'r.', 'markerfacecolor', 'r', 'markersize', 4);
         hold on;
         loglog(x_regression, y_regression, 'g.', 'markerfacecolor', 'g', 'markersize', 4);
+        loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 1);
         title('Convergence Analysis for Secant Method', 'FontSize', 14);
+        legend('Raw', 'Processed', 'Fitted line');
         xlabel('\epsilon_{n}', 'FontSize', 18);
         ylabel('\epsilon_{n+1}', 'FontSize', 18);
-        %xlim([10e-16, 10e1]);
-        %ylim([10e-19, 10e1])
+        xlim([10e-18, 10e5]);
+        ylim([10e-18, 10e5]);
         grid on;
-        loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 2);
-        legend('Raw', 'Processed', 'Fitted line');
+        axis square;
         hold off;
     
     elseif solver_flag == "fzero"
@@ -278,14 +281,15 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
         loglog(error_current, error_next, 'r.', 'markerfacecolor', 'r', 'markersize', 4);
         hold on;
         loglog(x_regression, y_regression, 'g.', 'markerfacecolor', 'g', 'markersize', 4);
+        loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 1);
         title('Convergence Analysis for fzero', 'FontSize', 14);
+        legend('Raw', 'Processed', 'Fitted line');
         xlabel('\epsilon_{n}', 'FontSize', 18);
         ylabel('\epsilon_{n+1}', 'FontSize', 18);
-        %xlim([10e-16, 10e1]);
-        %ylim([10e-19, 10e1])
+        xlim([10e-18, 10e5]);
+        ylim([10e-18, 10e5]);
         grid on;
-        loglog(fit_line_x, fit_line_y, 'k--', 'LineWidth', 2);
-        legend('Raw', 'Processed', 'Fitted line');
+        axis square;
         hold off;
 
     end
