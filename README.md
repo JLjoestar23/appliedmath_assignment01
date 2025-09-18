@@ -17,3 +17,5 @@ difficult numerical problem in order to give you some practice thinking about ho
 a problem that you haven’t seen before. One of the deliverables for this part will be an animation of the system being
 modeled. This assignment will walk you through the necessary steps of generating the animation in MATLAB and
 then converting it to a video, which is something that you will do several times throughout this course.
+
+Link to the tumbling egg animation is: https://www.youtube.com/watch?v=Fg_f1TsWzHM
