@@ -82,7 +82,7 @@ t_end = min([t_ground, t_wall]);
 s_perimeter = linspace(0, 1, 200);
 
 % figure setup
-fig = figure();
+fig = figure('Color', 'w');
 axis equal;
 hold on;
 grid on;
@@ -104,14 +104,14 @@ X_traj = [];
 Y_traj = [];
 
 % Video recording setup 
-%video_filename = 'tumbling_egg.mp4';
-%v = VideoWriter(video_filename, 'MPEG-4');
-%v.FrameRate = 1/0.02; % match simulation dt for real-time
-%open(v);
+video_filename = 'tumbling_egg.mp4';
+v = VideoWriter(video_filename, 'MPEG-4');
+v.FrameRate = 1/0.02; % match simulation dt for real-time
+open(v);
 
 % animation loop
-dt = 0.01; % frame step
-for t = 0:dt:t_end
+dt = 0.001; % frame step
+for t = linspace(0, t_end, floor(t_end*60))
     % get egg trajectory state
     [x0, y0, theta] = egg_trajectory(t);
 
@@ -128,12 +128,12 @@ for t = 0:dt:t_end
     drawnow;
 
     % record current frame
-    %frame = getframe(fig);
-    %writeVideo(v, frame);
+    frame = getframe(fig);
+    writeVideo(v, frame);
 
     % pacing for real-time playback
-    pause(dt);
+    pause(1/60);
 end
 
-%close(v);
+close(v);
 disp('Animation finished: egg collided with ground or wall.');
