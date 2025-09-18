@@ -405,6 +405,7 @@ for i = 1:1000
 end
 
 convergence_analysis("newton", @edge_case_function, x0_list, [], []);
+convergence_analysis("secant", @edge_case_function, x0_list, [], []);
 
 %% Testing sigmoid function with Newton's method
 
@@ -430,7 +431,7 @@ for i=1:length(x_test_range)
 end
 
 % initial guesses close to x_r are successful
-figure();
+figure('Color', 'w');
 hold on;
 plot(x_test_range, sigmoid_test_function(x_test_range));
 plot(x_test_range, zeros(1, length(x_test_range)), '--');
@@ -445,7 +446,7 @@ hold off;
 %% Testing sigmoid function with secant method
 
 % initialize root test range
-x_test_range = linspace(0, 50, 200);
+x_test_range = linspace(0, 50, 500);
 
 % sort initial guesses into success or fail depending on convergence
 success_list_x0 = [];
@@ -473,7 +474,7 @@ for i=1:length(x_test_range)
 end
 
 % most initial guesses failed
-figure();
+figure('Color', 'w');
 hold on;
 plot(success_list_x0, success_list_x1, 'g.');
 plot(fail_list_x0, fail_list_x1, 'r.');
@@ -507,7 +508,7 @@ for i=1:length(x_test_range)
 end
 
 % all initial guesses were successful
-figure();
+figure('Color', 'w');
 hold on;
 plot(x_test_range, sigmoid_test_function(x_test_range));
 plot(x_test_range, zeros(1, length(x_test_range)), '--');
@@ -521,42 +522,41 @@ hold off;
 
 %% Testing sigmoid function with bisection method
 
-% for plotting purposes
-x_test_range = linspace(0, 50, 500);
+% initialize root test range
+x_test_range = linspace(0, 50, 200);
 
 % sort initial guesses into success or fail depending on convergence
-success_list = [];
-fail_list = [];
+success_list_x0 = [];
+success_list_x1 = [];
+fail_list_x0 = [];
+fail_list_x1 = [];
 
 % find good root approx based on close initial guess
-x_r = bisection_solver(@sigmoid_test_function, 25, 30, 10e-14, 1000);
-
-% initialize root test range
-x_test_range_L = linspace(0, x_r - 0.01, 250);
-x_test_range_R = linspace(x_r + 0.01, x_r + (50 - x_r), 250);
+x_r = bisection_solver(@sigmoid_test_function, 25, 40, 10e-14, 1000);
 
 % start testing initial guesses
-for i=1:length(x_test_range_L)
-    current_guess_L = x_test_range_L(i);
-    current_guess_R = x_test_range_R(i);
-    root_approx = bisection_solver(@sigmoid_test_function, current_guess_L, current_guess_R, 10e-14, 1000);
-    disp(root_approx)
-    if isnan(root_approx)
-        fail_list = [fail_list, [current_guess_L, current_guess_R]];
-    else
-        success_list = [success_list, [current_guess_L, current_guess_R]];
+for i=1:length(x_test_range)
+    for j=1:length(x_test_range)
+        current_guess_0 = x_test_range(i);
+        current_guess_1 = x_test_range(j);
+        root_approx = bisection_solver(@sigmoid_test_function, current_guess_0, current_guess_1, 10e-14, 1000);
+        if isnan(root_approx)
+            fail_list_x0(end+1) = current_guess_0;
+            fail_list_x1(end+1) = current_guess_1;
+        else
+            success_list_x0(end+1) = current_guess_0;
+            success_list_x1(end+1) = current_guess_1;
+        end
     end
 end
 
-% all initial guess pairs were successful
-figure();
+% most initial guesses failed
+figure('Color', 'w');
 hold on;
-plot(x_test_range, sigmoid_test_function(x_test_range));
-plot(x_test_range, zeros(1, length(x_test_range)), '--');
-plot(success_list, sigmoid_test_function(success_list), 'g.');
-plot(fail_list, sigmoid_test_function(fail_list), 'r.');
-plot(x_r, sigmoid_test_function(x_r), 'b.', 'MarkerSize', 15);
-legend('', '', 'Successful x0', 'Failed x0', 'Zero');
-title('Testing Bisection Method on a Shifted Sigmoid Function');
+plot(success_list_x0, success_list_x1, 'g.');
+plot(fail_list_x0, fail_list_x1, 'r.');
+title('Initial Guess Testing with Bisection Method on a Shifted Sigmoid Function');
+xlabel('x0');
+ylabel('x1')
 grid on;
 hold off;
