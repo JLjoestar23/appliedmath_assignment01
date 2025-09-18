@@ -189,7 +189,7 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
             % clear the input_list global variable
             input_list = [];
             % run the newton solver
-            x_r = secant_solver_jojo(@convergence_test_func, x0, x0 + 0.1, 10e-14, 1000);
+            x_r = secant_solver_jojo(fun, x0, x0 + 0.01, 10e-14, 1000);
             % at this point, input_list will be populated with the values that the 
             % solver called at each iteration. In other words, it is now 
             % [x_1,x_2,...x_n-1,x_n] append the collected data to the compilation
@@ -247,7 +247,7 @@ function convergence_analysis(solver_flag, fun, x0_list, x_guess_list_0, x_guess
             % clear the input_list global variable
             input_list = [];
             % run the newton solver
-            x_r = fzero(@convergence_test_func, x0);
+            x_r = fzero(fun, x0);
             % at this point, input_list will be populated with the values that the 
             % solver called at each iteration. In other words, it is now 
             % [x_1,x_2,...x_n-1,x_n] append the collected data to the compilation
